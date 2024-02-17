@@ -6,7 +6,7 @@ services:
     image: chatbot-backend-image
     build: 
       context: .
-      dockerfile: apps/docker/backend/Dockerfile.dev    
+      dockerfile: apps/docker/backend/Dockerfile    
     ports:
       - "8000:8000"
     volumes:
