@@ -9,4 +9,5 @@ RUN python3 -m venv /opt/venv && \
     /opt/venv/bin/pip install -r requirements.txt && \
     chmod +x /apps/backend/entrypoint.sh
 
-CMD [ "/apps/backend/entrypoint.sh" ]
+# CMD [ "/apps/backend/entrypoint.sh" ]
+ENTRYPOINT [ "sh" ,"/apps/backend/entrypoint.sh" ]
