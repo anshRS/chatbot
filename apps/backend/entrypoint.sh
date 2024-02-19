@@ -13,12 +13,6 @@ echo "-----------Database migrated-----------"
 
 echo "-----------Creating superuser-----------"
 /opt/venv/bin/python manage.py superuser || true
-echo "-----------Superuser created-----------"
-
-# echo "-----------Collecting static files-----------"
-# /opt/venv/bin/python manage.py collectstatic --noinput
-# echo "-----------Static files collected-----------"
 
 echo "-----------Starting server-----------"
-# /opt/venv/bin/daphne -b 0.0.0.0 -p 8000 backend.asgi:application
 /opt/venv/bin/python manage.py runserver 0.0.0.0:8000

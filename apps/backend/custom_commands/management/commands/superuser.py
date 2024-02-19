@@ -13,16 +13,19 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         try:
             User = get_user_model()
-            user = User(
-                email=DJANGO_SUPERUSER_EMAIL,
-                username=DJANGO_SUPERUSER_USERNAME,
-            )
-            user.set_password(DJANGO_SUPERUSER_PASSWORD)
-            user.is_superuser = True
-            user.is_staff = True
-            user.is_admin = True
-            user.save()
-            self.stdout.write(self.style.SUCCESS('Successfully created new superuser'))
+            if not User.objects.filter(username=DJANGO_SUPERUSER_USERNAME).exists():
+                user = User(
+                    email=DJANGO_SUPERUSER_EMAIL,
+                    username=DJANGO_SUPERUSER_USERNAME,
+                )
+                user.set_password(DJANGO_SUPERUSER_PASSWORD)
+                user.is_superuser = True
+                user.is_staff = True
+                user.is_admin = True
+                user.save()
+                self.stdout.write(self.style.SUCCESS('-----------Successfully created new superuser-----------'))
+            else:
+                self.stdout.write(self.style.SUCCESS('-----------Superuser already exists-----------'))                
         except Exception as e:
             raise CommandError(e)
         
