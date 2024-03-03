@@ -40,9 +40,12 @@ const LoginForm = () => {
         defaultValues,
     });
 
+    const router = useRouter();
+
     const onSubmit = (data: LoginFormInterface) => {
         // make api call here
         console.log(data)
+        router.push('/chat/')
     }
 
     return (
