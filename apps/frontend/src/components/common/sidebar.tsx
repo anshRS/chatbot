@@ -44,10 +44,11 @@ const Sidebar = () => {
 
                     <div className='flex gap-3 p-2 hover:bg-input cursor-pointer items-center rounded-md'>
                         <Avatar className='border-2'>
-                            <AvatarImage src={user.profileImage} />
+                            {user ? <AvatarImage src={user.profileImage} /> : null}
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
-                        <p>{user.fullName}</p>
+                        {user ? <p>{user.full_name}</p> : null}
+
                     </div>
 
                 </div>
@@ -85,10 +86,11 @@ const Sidebar = () => {
 
                                     <div className='flex gap-3 p-2 hover:bg-input cursor-pointer items-center rounded-md'>
                                         <Avatar className='border-2'>
-                                            <AvatarImage src={user.profileImage} />
+                                            {user ? <AvatarImage src={user.profileImage} /> : null}
+                                            <AvatarImage src="" />
                                             <AvatarFallback>CN</AvatarFallback>
                                         </Avatar>
-                                        <p>{user.fullName}</p>
+                                        {user ? <p>{user.full_name}</p> : null}
                                     </div>
 
                                 </div>
