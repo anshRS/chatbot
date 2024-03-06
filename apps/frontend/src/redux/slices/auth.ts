@@ -10,25 +10,17 @@ interface AuthState {
 // Define types for the actions
 interface LoginPayload {
     isLoggedIn: boolean;
-    token: string;
-    user: IUser;
+    token: string;    
 }
 
-// const initialState: AuthState = {
-//     isLoggedIn: false,
-//     token: "",
-//     user: null,
-// }
+interface UserPayload {
+    user: IUser;
+}
 
 const initialState: AuthState = {
     isLoggedIn: false,
     token: "",
-    user: {
-        userId: '1',
-        fullName: 'John Doe',
-        email: 'john@test.com',
-        profileImage: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
-    },
+    user: null    
 }
 
 const authSlice = createSlice({
@@ -36,10 +28,12 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         logIn: (state, action: PayloadAction<LoginPayload>) => {
-            const { isLoggedIn, token, user } = action.payload;
+            const { isLoggedIn, token } = action.payload;
             state.isLoggedIn = isLoggedIn;
             state.token = token;
-            state.user = user;
+        },
+        setUserInfo: (state, action: PayloadAction<UserPayload>) => {
+            state.user = action.payload.user;
         },
         signOut: (state) => {
             state.isLoggedIn = false;
@@ -49,5 +43,5 @@ const authSlice = createSlice({
     }
 })
 
-export const { logIn, signOut } = authSlice.actions
+export const { logIn, signOut, setUserInfo } = authSlice.actions
 export default authSlice.reducer
