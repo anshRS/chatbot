@@ -100,7 +100,8 @@ if all([POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB]):
             'USER': POSTGRES_USER,
             'PASSWORD': POSTGRES_PASSWORD,
             'HOST': 'db',
-            'PORT': 5432,
+            # 'HOST': '127.0.0.1',
+            'PORT': 5432,            
         }
     }
 
@@ -147,6 +148,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Custom User Model
 AUTH_USER_MODEL = 'core.User'
 
 CHANNEL_LAYERS = {
@@ -159,21 +161,15 @@ CHANNEL_LAYERS = {
 }
 
 # Email configuration
-EMAIL_BACKEND = config('EMAIL_BACKEND')
-MAILER_EMAIL_BACKEND = config('MAILER_EMAIL_BACKEND')
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_PORT = 465
-EMAIL_USE_SSL = True
-DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = True
 
-CORS_ALLOW_ALL_ORIGINS = True
-
+# JWT Configuration
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
@@ -182,21 +178,36 @@ REST_FRAMEWORK = {
 # simple JWT settings configuration JWT -> Token
 SIMPLE_JWT={
     'AUTH_HEADER_TYPES': ('JWT',),
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=20),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": True,
+    "UPDATE_LAST_LOGIN": True,
 }
 
 # DJOSER settings configuration
 DJOSER = {
-    'SERIALIZERS': {
-        'user_create': 'core.serializers.UserCreateSerializer', # for user create
-        'current_user': 'core.serializers.UserCreateSerializer', # for current user
-        'user': 'core.serializers.UserCreateSerializer', # for user
-    },
+    'LOGIN_FIELD': 'email',
+    'USER_CREATE_PASSWORD_RETYPE':True,
+    'ACTIVATION_URL': 'account/activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': True,
-    'ACTIVATION_URL': 'auth/activate/?uid={uid}&token={token}',
-    'PASSWORD_RESET_CONFIRM_URL': 'auth/reset-password/?uid={uid}&token={token}',
+    'SEND_CONFIRMATION_EMAIL':True,
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION':True,
+    'PASSWORD_RESET_CONFIRM_URL': 'account/reset-password-confirm/{uid}/{token}',
+    'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND': True,
+    'TOKEN_MODEL': None,     
+    'SERIALIZERS': {
+        'user_create': 'core.serializers.UserCreateSerializer',      
+        'user': 'core.serializers.UserCreateSerializer',
+        'user_delete': 'djoser.serializers.UserDeleteSerializer',
+    },
 }
 
-DOMAIN='localhost:8000'
+# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+
+DOMAIN='localhost:3000'
 SITE_NAME='Chatdroid Chat App'

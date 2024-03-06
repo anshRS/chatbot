@@ -1,7 +1,6 @@
-from django.urls import path
-from . import views
+from django.urls import path, include
 
 urlpatterns = [
-    path('exists',views.check_email_exists,name='exists'),
-    path('home',views.home,name='home'),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.jwt')),
 ]
