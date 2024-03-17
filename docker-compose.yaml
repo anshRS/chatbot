@@ -16,6 +16,7 @@ services:
     depends_on:
       - db
       - redis  
+      - ollama
 
   db:
     container_name: postgres
@@ -32,6 +33,15 @@ services:
     image: redis:latest
     ports:
       - "6379:6379"  
+    
+  ollama:
+    container_name: ollama
+    image: ollama/ollama
+    ports:
+      - 11434:11434
+    volumes:
+      - ollama:/root/.ollama      
 
 volumes:
   db-data:  
+  ollama:
