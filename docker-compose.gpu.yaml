@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  backend:
+    container_name: chatbot-backend
+    image: chatbot-backend-image
+    build: 
+      context: .
+      dockerfile: apps/docker/backend/Dockerfile    
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./apps/backend:/apps/backend
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+      - redis  
+      - ollama
+
+  db:
+    container_name: postgres
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    env_file:
+      - ./.env
+  
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"  
+    
+  ollama:
+    container_name: ollama
+    image: ollama/ollama
+    ports:
+      - 11434:11434
+    volumes:
+      - ollama:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  db-data:  
+  ollama:
