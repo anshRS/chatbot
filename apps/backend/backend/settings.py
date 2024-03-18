@@ -100,8 +100,8 @@ if all([POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB]):
             'NAME': POSTGRES_DB,
             'USER': POSTGRES_USER,
             'PASSWORD': POSTGRES_PASSWORD,
-            # 'HOST': 'db',
-            'HOST': '127.0.0.1',
+            'HOST': 'db',
+            # 'HOST': '127.0.0.1',
             'PORT': 5432,            
         }
     }
@@ -156,8 +156,8 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            # "hosts": [("redis", 6379)],
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [("redis", 6379)],
+            # "hosts": [("127.0.0.1", 6379)],
         },
     },
 }
