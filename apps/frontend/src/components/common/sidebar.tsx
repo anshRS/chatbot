@@ -1,44 +1,68 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { toggleChatSideBar } from '@/redux/slices/app';
 import NewChat from '../chat/newchat';
 import ChatRow from '../chat/chatrow';
-
-
-interface Message {
-    id: string;
-    text: string;
-}
+import axios from '@/utils/axios';
+import { UpdateIcon } from '@radix-ui/react-icons';
+import { setChats } from '@/redux/slices/chat';
 
 interface Chat {
-    id: string;
-    topic: string;
-    messages: Message[];
+    id: number;   
+    title: string
 }
 
 const Sidebar = () => {
     const chatsidebar = useSelector((state: RootState) => state.app.chatsidebar)
-    const chatHistory = useSelector((state: RootState) => state.chat.chatHistory);
+    const { user, token } = useSelector((state: RootState) => state.auth);   
+    const { chats } = useSelector((state: RootState) => state.chat);   
+    const [loading, setLoading] = useState(true);
 
     const dispatch = useDispatch();
-    const user = useSelector((state: RootState) => state.auth.user)
+
+    const getChats = async () => {
+        try {
+            const response = await axios.get('/chats/', {
+                headers: {
+                    Authorization: `JWT ${token}`,
+                }
+            });            
+            setLoading(false);                   
+            dispatch(setChats(response.data));            
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching chats:', error);            
+            return [];
+        }
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const chats = await getChats();            
+        }
+        fetchData();
+    }, [])
 
     return (
         <>
             <div className='w-[260px] hidden h-screen md:block bg-sidebar'>
                 <div className='h-full rounded-lg py-2 flex flex-col justify-between gap-3'>
-                    <div className='px-2 overflow-y-auto custom-scrollbar'>
-                        <NewChat />
+                    <div className='px-2 overflow-y-auto custom-scrollbar'>                        
+                        <NewChat/> 
                         {
-                            chatHistory.map((chat: Chat) => {
-                                return (
-                                    <ChatRow key={chat.id} id={chat.id} />
-                                )
-                            })
+                            loading
+                                ? <div className='w-full flex flex-col items-center justify-center'>
+                                    <UpdateIcon className='animate-spin h-4 w-4 mr-2' />
+                                </div>
+                                : chats.map((chat: Chat) => {
+                                    return (
+                                        <ChatRow key={chat.id} id={chat.id} title={chat.title}/>
+                                    )
+                                })
                         }
                     </div>
 
@@ -73,12 +97,12 @@ const Sidebar = () => {
                             </div>
                             <div className="max-w-64 w-full bg-sidebar shadow-xl">
                                 <div className='h-full rounded-lg py-2 flex flex-col justify-between gap-3'>
-                                    <div className='px-2 overflow-y-auto custom-scrollbar'>
-                                        <NewChat />
+                                    <div className='px-2 overflow-y-auto custom-scrollbar'>                                       
+                                        <NewChat/>
                                         {
-                                            chatHistory.map((chat: Chat) => {
+                                            chats.map((chat: Chat) => {
                                                 return (
-                                                    <ChatRow key={chat.id} id={chat.id} />
+                                                    <ChatRow key={chat.id} id={chat.id} title={chat.title}/>
                                                 )
                                             })
                                         }
