@@ -20,6 +20,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { signOut } from "@/redux/slices/auth"
 import { toast } from "react-toastify"
+import { resetChatHistory } from "@/redux/slices/chat"
 
 const Navbar = () => {
 	const { isLoggedIn, user } = useSelector((state: RootState) => state.auth);
@@ -27,6 +28,7 @@ const Navbar = () => {
 
 	const handleLogout = () => {
 		dispatch(signOut());
+		dispatch(resetChatHistory());
 
 		toast.success("Logout Successful!", {
 			position: "top-center",

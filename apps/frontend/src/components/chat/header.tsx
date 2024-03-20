@@ -20,6 +20,7 @@ import { Button } from '../ui/button'
 import { RootState } from '@/redux/store'
 import { toast } from 'react-toastify'
 import { signOut } from '@/redux/slices/auth'
+import { resetChatHistory } from '@/redux/slices/chat'
 
 const Header = () => {
     const user = useSelector((state: RootState) => state.auth.user)
@@ -27,6 +28,7 @@ const Header = () => {
 
     const handleLogout = () => {
         dispatch(signOut());
+        dispatch(resetChatHistory());
 
         toast.success("Logout Successful!", {
             position: "top-center",
@@ -42,7 +44,7 @@ const Header = () => {
                     }}>
                         <HamburgerMenuIcon />
                     </Button>
-                    <h1 className='text-2xl font-medium'>Chat Droid</h1>
+                    <Link href="/" className='text-2xl font-medium'>Chat Droid</Link>
                 </div>
 
                 <div className="flex gap-2">
