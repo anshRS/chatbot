@@ -1,4 +1,3 @@
-
 interface IUser {
     id: string;
     email: string;
@@ -7,9 +6,17 @@ interface IUser {
     profileImage: string;
 }
 
+interface IChat {
+    id: number;
+    title: string;
+    user_email: string;
+    created_at: string;
+}
+
 interface IMessage {
-    id: string;
-    text: string;
-    sender: IUser;
-    timestamp: string;
+    id: number;
+    content: string;
+    sender_email: string | null;
+    chat: number;
+    created_at: string;
 }
