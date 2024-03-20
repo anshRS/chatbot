@@ -1,38 +1,32 @@
 import React from 'react'
 import { Cpu } from "@phosphor-icons/react";
 import { Separator } from '../ui/separator';
-
-
-interface User {
-    userId: string;
-    email: string;
-    fullName: string;
-    profileImage: string;
-}
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 type MessageProp = {
-    message: {
-        id: string;
-        text: string;
-        sender: User;
-        timestamp: string;
-    }
+    message: IMessage,    
 }
 
-const Message = ({ message }: MessageProp) => {    
-    const isBot = message.sender.fullName == 'Chat Bot';
+const Message = ({ message }: MessageProp) => {   
+    const { user } = useSelector((state: RootState) => state.auth);
     return (
         <>
-            {!isBot ? (
+            {message.sender_email ? (
                 <div className='max-w-2xl mx-auto'>
                     <div className='flex space-x-5'>
                         <div className='w-10 h-10 rounded-full border flex items-center justify-center p-1'>
-                            <img src={message.sender.profileImage} alt="" className='h-8 w-8 rounded-full' />
+                            <Avatar className='w-8 h-8'>
+                                {user && <AvatarImage src={user && user.profileImage} />}
+                                <AvatarFallback>CN</AvatarFallback>
+                            </Avatar>
                         </div>
+
                         <div className='flex flex-col'>
-                            <h2 className='font-semibold'>{message.sender.fullName}</h2>
-                            <p className='pt-1'>
-                                {message.text}
+                            <h2 className='font-semibold'>{user && user.full_name}</h2>
+                            <p className='pt-1 whitespace-pre-wrap'>
+                                {message.content}
                             </p>
                         </div>
                     </div>
@@ -45,15 +39,14 @@ const Message = ({ message }: MessageProp) => {
                             <Cpu size={32} />
                         </div>
                         <div className='flex flex-col'>
-                            <h2 className='font-semibold'>{message.sender.fullName}</h2>
-                            <p className='pt-1'>
-                                {message.text}
-                            </p>
+                            <h2 className='font-semibold'>ChatBot</h2>                          
+                                <p className='pt-1 whitespace-pre-wrap'>                                    
+                                    {message.content}
+                                </p>
                         </div>
                     </div>
                     <Separator className='mb-5 w-full my-5' />
-                </div>
-
+                </div>                
             )}
         </>
     )
