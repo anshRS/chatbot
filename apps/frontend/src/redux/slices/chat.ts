@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface ChatState {
     chats: IChat[];
     messages: IMessage[];
+    selectedMode: string;
 }
 
 const initialState: ChatState = {
     chats: [],
-    messages: []
+    messages: [],
+    selectedMode: 'chattergeist',
 }
 
 const chatSlice = createSlice({
@@ -57,8 +59,12 @@ const chatSlice = createSlice({
             state.chats = [];
             state.messages = [];
         },
+
+        setSelectedMode: (state, action: PayloadAction<{type: string}>) => {
+            state.selectedMode = action.payload.type;
+        }  
     }
 })
 
-export const { setChats, addChat, deleteChat, setMessages, addMessage, resetChatHistory, setChatTitleFromMessage } = chatSlice.actions;
+export const { setChats, addChat, deleteChat, setMessages, addMessage, resetChatHistory, setChatTitleFromMessage, setSelectedMode } = chatSlice.actions;
 export default chatSlice.reducer;

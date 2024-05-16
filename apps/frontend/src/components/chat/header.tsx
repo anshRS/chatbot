@@ -1,8 +1,9 @@
 'use client'
 
 import React from 'react'
+import { CheckIcon, GitHubLogoIcon, HamburgerMenuIcon } from '@radix-ui/react-icons'
+import { CaretDown, Cherries, Lightning } from '@phosphor-icons/react'
 
-import { GitHubLogoIcon, HamburgerMenuIcon } from '@radix-ui/react-icons'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -20,11 +21,18 @@ import { Button } from '../ui/button'
 import { RootState } from '@/redux/store'
 import { toast } from 'react-toastify'
 import { signOut } from '@/redux/slices/auth'
-import { resetChatHistory } from '@/redux/slices/chat'
+import { resetChatHistory, setSelectedMode } from '@/redux/slices/chat'
 
 const Header = () => {
     const user = useSelector((state: RootState) => state.auth.user)
+    const selectedMode  = useSelector((state: RootState) => state.chat.selectedMode)
     const dispatch = useDispatch();
+
+    const handleItemClick = (value: string) => {
+        dispatch(setSelectedMode({
+            type: value
+        }));
+    };
 
     const handleLogout = () => {
         dispatch(signOut());
@@ -44,7 +52,36 @@ const Header = () => {
                     }}>
                         <HamburgerMenuIcon />
                     </Button>
-                    <Link href="/" className='text-2xl font-medium'>Chat Droid</Link>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger className='text-xl font-medium capitalize flex items-center gap-2'>
+                            {selectedMode}
+                            <CaretDown size={16}/>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className='min-w-[340px] max-w-xs p-3' align='start'>
+                            <DropdownMenuLabel>Mode</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onSelect={() => handleItemClick('chattergeist')}>
+                                <div className='flex items-center gap-3 cursor-pointer'>
+                                    <Lightning size={32}/>
+                                    <div>
+                                        <h3 className='text-base'>Chattergeist</h3>
+                                        <p className='font-extralight'>A general chatbot for engaging conversations on various topics.</p>
+                                    </div>
+                                    {selectedMode === 'chattergeist' && <CheckIcon className="h-8 w-8"/>}
+                                </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => handleItemClick('noura')}>
+                                <div className='flex items-center gap-3 cursor-pointer'>
+                                    <Cherries size={32} />
+                                    <div>
+                                        <h3 className='text-base'>Noura</h3>
+                                        <p className='font-extralight'>A nutrition-focused chatbot using the RAG pipeline for personalized advice.</p>
+                                    </div>
+                                    {selectedMode === 'noura' && <CheckIcon className="h-8 w-8"/>}
+                                </div>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
 
                 <div className="flex gap-2">
