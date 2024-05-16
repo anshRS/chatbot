@@ -7,6 +7,8 @@ import { useSelector } from "react-redux";
 import { useEffect, useRef } from "react";
 import { Cpu } from "@phosphor-icons/react";
 import { Separator } from "@radix-ui/react-dropdown-menu";
+import { marked } from "marked";
+import hljs from "highlight.js";
 
 type ChatAreaProps = {
     chatId: string;
@@ -16,6 +18,14 @@ type ChatAreaProps = {
 const ChatArea = ({ chatId, chunks }: ChatAreaProps) => {   
     const { messages } = useSelector((state: RootState) => state.chat);
     const chatRef = useRef<HTMLDivElement>(null);  
+        
+    const renderer = new marked.Renderer();
+    renderer.code = (code, language) => {
+        const validLanguage = hljs.getLanguage(language!) ? language : 'plaintext';
+        return `<pre><code class="language-${validLanguage}">${hljs.highlight(validLanguage!, code).value}</code></pre>`;
+    };
+    marked.setOptions({ renderer });
+    const html = marked(chunks);
 
     useEffect(() => {
         if (chatRef.current) {
@@ -55,7 +65,8 @@ const ChatArea = ({ chatId, chunks }: ChatAreaProps) => {
                             <div className='flex flex-col'>
                                 <h2 className='font-semibold'>ChatBot</h2>
                                 <p className='pt-1 whitespace-pre-wrap'>
-                                    {chunks}
+                                    {/* {chunks} */}
+                                    <div className='whitespace-pre-wrap' dangerouslySetInnerHTML={{ __html: html }} />
                                 </p>
                             </div>
                         </div>

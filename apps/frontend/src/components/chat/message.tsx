@@ -4,13 +4,29 @@ import { Separator } from '../ui/separator';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { marked } from 'marked';
+import hljs from 'highlight.js';
 
 type MessageProp = {
-    message: IMessage,    
+    message: IMessage,
 }
 
-const Message = ({ message }: MessageProp) => {   
+const Message = ({ message }: MessageProp) => {
     const { user } = useSelector((state: RootState) => state.auth);
+    const getMarkdownText = () => {
+        var rawMarkup = marked.parse(message.content);
+        return { __html: rawMarkup };
+    }
+
+    const renderer = new marked.Renderer();
+    renderer.code = (code, language) => {
+        const validLanguage = hljs.getLanguage(language!) ? language : 'plaintext';
+        return `<pre><code class="language-${validLanguage}">${hljs.highlight(validLanguage!, code).value}</code></pre>`;
+    };
+
+    marked.setOptions({ renderer });
+    const html = marked(message.content);
+
     return (
         <>
             {message.sender_email ? (
@@ -39,14 +55,16 @@ const Message = ({ message }: MessageProp) => {
                             <Cpu size={32} />
                         </div>
                         <div className='flex flex-col'>
-                            <h2 className='font-semibold'>ChatBot</h2>                          
-                                <p className='pt-1 whitespace-pre-wrap'>                                    
+                            <h2 className='font-semibold'>ChatBot</h2>
+                            {/* <p className='pt-1 whitespace-pre-wrap'>                                    
                                     {message.content}
-                                </p>
+                                </p> */}
+                            {/* <div className='whitespace-pre-wrap' dangerouslySetInnerHTML={getMarkdownText()} /> */}
+                            <div className='whitespace-pre-wrap' dangerouslySetInnerHTML={{ __html: html }} />
                         </div>
                     </div>
                     <Separator className='mb-5 w-full my-5' />
-                </div>                
+                </div>
             )}
         </>
     )
