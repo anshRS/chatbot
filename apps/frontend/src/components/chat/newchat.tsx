@@ -29,8 +29,8 @@ const NewChat= () => {
     }
 
     return (
-        <div className='sticky top-0 left-0 py-2' onClick={createNewChat}>
-            <div className='flex justify-between px-2 py-2 rounded-md hover:bg-input cursor-pointer'>
+        <div className='sticky top-0 left-0 py-2 z-10' onClick={createNewChat}>
+            <div className='flex justify-between px-2 py-2 rounded-md bg-sidebar hover:bg-input cursor-pointer'>
                 <div className='flex gap-3'>
                     <StackIcon className='h-6 w-6' />
                     <h1>New chat</h1>

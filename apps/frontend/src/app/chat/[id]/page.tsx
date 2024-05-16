@@ -21,6 +21,7 @@ const ChatPage = ({ params: { id } }: ChatPageProps) => {
     const [loading, setLoading] = useState(false)
     const [chunks, setChunks] = useState<string>('');
     const dispatch = useDispatch();
+    const selectedMode = useSelector((state: RootState) => state.chat.selectedMode)
 
     useEffect(() => {        
         const fetchMessages = async () => {
@@ -50,7 +51,10 @@ const ChatPage = ({ params: { id } }: ChatPageProps) => {
     const sendMessage = (message: string) => {
         if (ws?.readyState === WebSocket.OPEN) {
             setLoading(true)
-            ws.send(JSON.stringify({ message }));               
+            ws.send(JSON.stringify({
+                message,
+                type: selectedMode
+            }));
         }
     };
 
@@ -60,15 +64,15 @@ const ChatPage = ({ params: { id } }: ChatPageProps) => {
         ws.onmessage = (event) => {
             const res = JSON.parse(event.data);
 
-            if (res.user_data) {                              
-                dispatch(addMessage(res.user_data));    
-                dispatch(setChatTitleFromMessage({chatId: parseInt(id, 10), title: res.title}));            
+            if (res.user_data) {
+                dispatch(addMessage(res.user_data));
+                dispatch(setChatTitleFromMessage({ chatId: parseInt(id, 10), title: res.title }));
 
             }
-            if (res.llm_response) {                
-                dispatch(addMessage(res.llm_response));                
+            if (res.llm_response) {
+                dispatch(addMessage(res.llm_response));
                 setLoading(false);
-                setChunks('')
+                setChunks('')                
             }
 
             if (res.data_stream) {
