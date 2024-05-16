@@ -8,13 +8,26 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+
+import { Button } from "../ui/button";
+
 type NewChatProps = {
     id: number,
     title: string,
 };
 
 const ChatRow = ({ id, title }: NewChatProps) => {
-    
+
     const pathname = usePathname();
     const router = useRouter();
     const { token } = useSelector((state: RootState) => state.auth);
@@ -86,14 +99,34 @@ const ChatRow = ({ id, title }: NewChatProps) => {
                         className="px-2 focus:outline-muted w-full"
                     />
                 ) : (
-                    <p className='truncate'>{title ? title : "New Chat"}</p>
+                    <p className='truncate text-sm py-0.5'>{title ? title : "New Chat"}</p>
                 )}
                 {active && (
                     <>
                         <div className="absolute bottom-0 right-0 top-0 bg-gradient-to-l from-input w-20 from-60%"></div>
                         <div className="absolute top-0 bottom-0 right-0 flex items-center pr-2 gap-1">
                             <Pencil1Icon className="w-5 h-5 group-hover:block cursor-pointer" onClick={handleEditTitle} />
-                            <TrashIcon className="w-5 h-5 group-hover:block cursor-pointer" onClick={handleDeleteChat} />
+                            <Dialog>
+                                <DialogTrigger>
+                                    <TrashIcon className="w-5 h-5 group-hover:block cursor-pointer" />
+                                </DialogTrigger>
+                                <DialogContent className="max-w-md">
+                                    <DialogHeader>
+                                        <DialogTitle className="py-5">Delete Chat?</DialogTitle>
+                                        <DialogDescription>
+                                            This action cannot be undone. This will permanently delete your chat.
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <DialogFooter className="sm:justify-end">
+                                        <DialogClose asChild>
+                                            <Button type="button" variant="secondary">
+                                                Cancel
+                                            </Button>
+                                        </DialogClose>
+                                        <Button type="button" className="bg-red-400 hover:bg-red-500" onClick={handleDeleteChat}>Delete</Button>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
                         </div>
                     </>
                 )}
