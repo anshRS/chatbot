@@ -1,15 +1,21 @@
-<h1 align="center"> Nourality </h1> <br>
+<h1 align="center"> Nourality </h1>
 
 <div align="center">
- <img alt="ollama" height="200px" src="https://github.com/anshRS/chatbot/assets/114407607/720bb122-2253-4fd7-b518-a66dbcb84721">
+ <img alt="nourality" height="200px" src="https://github.com/anshRS/chatbot/assets/114407607/720bb122-2253-4fd7-b518-a66dbcb84721">
 </div>
 
+<p align="center">
+  A dual mode RAG chatbot
+</p>
+
 ## Table of Contents
+
 - [Introduction](#introduction)
 - [Features](#features)
 - [Technology](#tech-stack-used)
 
 ## Introduction
+
 __*Nourality*__ is a unique chatbot designed to offer users a versatile
 conversational experience. It operates in two modes: `Chattergiest Mode`, a general chatbot
 providing responses for casual interactions, and `Noura Mode`, a specialized mode focusing on
@@ -19,6 +25,7 @@ the Retrieval-Augmented Generation (RAG) pipeline, ensuring contextually relevan
 engaging conversations.
 
 ## Features
+
 * Secure access control for users
 * Ensures account activation through email verification
 * Allows users to change their passwords easily
