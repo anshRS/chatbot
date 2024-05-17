@@ -13,16 +13,13 @@
 - [Introduction](#introduction)
 - [Features](#features)
 - [Technology](#tech-stack-used)
+- [Project Preview](#project-preview)
+- [Support](#support)
 
 ## Introduction
 
-__*Nourality*__ is a unique chatbot designed to offer users a versatile
-conversational experience. It operates in two modes: `Chattergiest Mode`, a general chatbot
-providing responses for casual interactions, and `Noura Mode`, a specialized mode focusing on
-nutrition-related information and advice. While both modes use the `Llama 2 (7B) model`, a 7
-billion parameter large language model (LLM), to generate responses, only Noura Mode utilizes
-the Retrieval-Augmented Generation (RAG) pipeline, ensuring contextually relevant and
-engaging conversations.
+`Nourality` is a unique chatbot designed to offer users a versatile conversational experience. It operates in two modes: `Chattergiest Mode`, a general chatbot
+providing responses for casual interactions, and `Noura Mode`, a specialized mode focusing on nutrition-related information and advice. While both modes use the `Llama 2 (7B) model`, a 7 billion parameter large language model (LLM), to generate responses, only Noura Mode utilizes the Retrieval-Augmented Generation (RAG) pipeline, ensuring contextually relevant and engaging conversations.
 
 ## Features
 
@@ -45,3 +42,13 @@ engaging conversations.
 | `shadcn`           | `PostgreSQL`      | `ChromaDB`        |
 | `Redux`            | `MongoDB`         | `Meta Llama 2`    |
 | `TypeScript`       | `LangChain`       | `Selenium`        |
+
+## Project Preview
+
+Demo video showing the working of the website. Navigating through different sections:
+
+https://github.com/anshRS/chatbot/assets/114407607/80dbf4aa-f7d2-4c3a-91a6-fb6f33ed2791
+
+## Support
+
+If you find the project useful or interesting, please consider giving it a ⭐️! Your support is greatly appreciated and helps others discover this project.
