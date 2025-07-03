@@ -6,7 +6,7 @@ from channels.exceptions import StopConsumer
 
 import json
 from django.contrib.auth import get_user_model
-from chat.llm.controller import get_llm_response
+from .llm.controller import GenerateLlamaResponse
 
 import asyncio
 from asgiref.sync import sync_to_async
@@ -25,7 +25,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				raise InvalidToken("Invalid token")
 			
 			self.user = await self.get_user(user_id)
-			print(self.user)
+			print("Current User:", self.user)
 			
 		except (InvalidToken, User.DoesNotExist):
 			await self.close()
@@ -34,7 +34,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			self.chat_id = self.scope['url_route']['kwargs']['chat_id']
 			self.chat_group_name = f"chat_{self.chat_id}"
 			self.user_message_sent = False
-			
+			self.generate_response = GenerateLlamaResponse(self.chat_id)
+
 			await self.channel_layer.group_add(
 				self.chat_group_name,
 				self.channel_name
@@ -49,6 +50,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	async def receive(self, text_data=None, bytes_data=None):
 		data = json.loads(text_data)
 		message_content = data.get('message', '')
+		type = data.get('type', '')
 		chat_title = message_content[:50]
 
 		chat = await self.get_chat(self.chat_id)
@@ -76,14 +78,25 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 		llm_response_chunks = []
 		llm_system_message = ''		
+		
+		print("Mode:", type) 
+		if(type == 'chattergeist'):
+			async for chunk in self.generate_response.chat_with_memory(message_content):
+				llm_response_chunks.append(chunk)			
+				llm_system_message = ''.join(llm_response_chunks)	
 
-		async for chunk in get_llm_response(message_content):
-			llm_response_chunks.append(chunk)			
-			llm_system_message = ''.join(llm_response_chunks)	
+				await self.send(text_data=json.dumps({				
+					'data_stream': chunk,		
+				}))
+		else:
+			# async for chunk in get_llm_response(message_content):
+			async for chunk in self.generate_response.rag_with_memory(message_content):
+				llm_response_chunks.append(chunk)			
+				llm_system_message = ''.join(llm_response_chunks)	
 
-			await self.send(text_data=json.dumps({				
-				'data_stream': chunk,		
-			}))
+				await self.send(text_data=json.dumps({				
+					'data_stream': chunk,		
+				}))
 
 		llm_system_message = await self.create_message(llm_system_message, None, chat)
 
@@ -108,7 +121,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 	@database_sync_to_async
 	def create_message(self, content, user, chat):
-		return Message.objects.create(content=content, sender=user, chat=chat)	
+		return Message.objects.create(content=content, sender=user, chat=chat, content_length=len(content))	
 
 	async def chat_message(self, event):
 		message = event['message']		
