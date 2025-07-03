@@ -15,6 +15,7 @@ class Message(models.Model):
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_messages', null=True, blank=True)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    content_length = models.PositiveIntegerField(null=True, blank=True)
 
     class Meta:
         indexes = [

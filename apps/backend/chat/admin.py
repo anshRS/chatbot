@@ -12,7 +12,7 @@ class ChatModelAdmin(admin.ModelAdmin):
 
 @admin.register(Message)
 class MessageModelAdmin(admin.ModelAdmin):
-    list_display = ['id', 'content', 'sender_email', 'get_chat_id', 'created_at']   
+    list_display = ['id', 'content', 'sender_email', 'get_chat_id', 'created_at', 'content_length']   
 
     def sender_email(self, obj):
         return obj.sender.email if obj.sender else None
